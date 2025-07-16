@@ -14,6 +14,19 @@ export type ActionResult<T = any> = {
   error: string
 }
 
+// Form action for form submissions
+export async function createPostFormAction(formData: FormData) {
+  const content = formData.get('content') as string
+  const result = await createPost(content)
+  
+  if (!result.success) {
+    return { error: result.error }
+  }
+  
+  return { success: true }
+}
+
+// Programmatic action for direct calls
 export async function createPost(content: string): Promise<ActionResult<any>> {
   try {
     const { userId } = await auth()
@@ -33,8 +46,9 @@ export async function createPost(content: string): Promise<ActionResult<any>> {
     let user = await db.select().from(users).where(eq(users.clerkId, userId)).limit(1)
     
     if (user.length === 0) {
-      // Create user if doesn't exist
-      const { user: clerkUser } = await auth()
+      // Create user if doesn't exist - we need to get user info from Clerk
+      const { currentUser } = await import('@clerk/nextjs/server')
+      const clerkUser = await currentUser()
       if (!clerkUser) {
         return { success: false, error: 'User not found' }
       }
@@ -165,3 +179,5 @@ export async function toggleLike(postId: number): Promise<ActionResult<{ liked: 
     return { success: false, error: 'Failed to toggle like' }
   }
 }
+
+
