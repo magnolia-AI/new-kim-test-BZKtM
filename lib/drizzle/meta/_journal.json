@@ -1,1 +1,13 @@
-{"version":"7","dialect":"postgresql","entries":[]}
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1752660484516,
+      "tag": "0000_minor_marten_broadcloak",
+      "breakpoints": true
+    }
+  ]
+}
